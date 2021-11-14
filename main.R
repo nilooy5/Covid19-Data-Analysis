@@ -1,5 +1,15 @@
+#' ---
+#' title: Assignment 1
+#' author: Fazal Mahmud Niloy (u3228358)
+#' output: pdf_document
+#' ---
+
+# Start-------------------------------------------
+#' Unit & ID:   **Introduction to Data Science 11516**
+#' Course:      **Master of Data Science**
+#' Description: **Intro to Data Science Assignment 1**
+
 library(tidyverse)
-# library(carat)
 library(caret)
 library(ggplot2)
 library(lubridate)
@@ -357,4 +367,6 @@ lmModel2 <- lm(CumCases ~ . , data = train)
 summary(lmModel2)
 plot(lmModel2)
 
+test$PreditedAll <- predict(lmModel2, test)
+rmse(test$CumCases, test$PreditedAll)
 
