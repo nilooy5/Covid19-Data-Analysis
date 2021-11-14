@@ -1,5 +1,6 @@
 library(tidyverse)
-library(carat)
+# library(carat)
+library(caret)
 library(ggplot2)
 library(lubridate)
 library(scales)
@@ -277,3 +278,89 @@ lastDay_data %>%
   geom_col() +
   scale_y_log10()
 
+
+###############
+# Task 3: Q1  #
+###############
+
+cor_data <- subset(lastDay_data, select = c(CumCases, CumTests, Population, GDP, GDPCapita) )
+cor_data
+
+
+###############
+# Task 3: Q2  #
+###############
+
+cor_matrix <- cor(cor_data)
+cor_matrix
+
+corrplot(cor_matrix)
+corrplot(cor_matrix, method = "number")
+
+
+###############
+# Task 3: Q3  #
+###############
+
+# Distribution of cumulative cases without tranformation
+
+cor_data %>%
+  ggplot(aes(x = CumCases)) +
+  geom_histogram()
+
+# Distribution of cumulative cases with tranformation
+cor_data %>%
+  ggplot(aes(x = log(CumCases))) +
+  geom_histogram()
+
+###############
+# Task 3: Q4  #
+###############
+
+boxplot.stats(cor_data$CumCases)$out
+
+###############
+# Task 3: Q5  #
+###############
+
+# Divide the cor_data into training and testing data
+install.packages("caret")
+dt <- createDataPartition(cor_data$CumCases, p = 0.65, list = FALSE)
+train<-cor_data[dt,]
+test<-cor_data[-dt,]
+
+train
+test
+
+###############
+# Task 3: Q6  #
+###############
+
+# Fit the model
+lm_model_GDP_CUM <- lm(CumCases ~ GDP, data = train)
+
+# evaluate model on the test data
+summary(lm_model_GDP_CUM)
+plot(lm_model_GDP_CUM)
+
+# predicting
+test$PreditedCases <- predict(lm_model_GDP_CUM, test)
+test
+# print the root mean squared error
+preds <-  test$PreditedCases
+preds
+actual <- test$GDP
+actual
+rmse(preds, actual)
+
+
+###############
+# Task 3: Q7  #
+###############
+
+lmModel2 <- lm(CumCases ~ . , data = train)
+print(lmModel2)
+# Validating Regression Coefficients and Models
+summary(lmModel2)
+
+rm(test$PreditedPrice_1)
