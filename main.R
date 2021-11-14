@@ -131,9 +131,123 @@ View(df_master)
 
 # Check the functionalities by filtering a country
 View(df_master %>%
-  filter(Country == "Bangladesh") %>%
+  filter(Country == "Australia") %>%
   arrange(desc(Date)))
 
+###############
+# Task 2: Q3  #
+###############
+
+df_master <- df_master %>%
+  mutate(Cases_1M_Pop = (CumCases / Population) * 1000000) %>% # Calculate cases per million population
+  mutate(Deaths_1M_Pop = (CumDeaths / Population) * 1000000) %>%
+  mutate(Recovered_1M_Pop = (CumRecovered / Population) * 1000000) %>%
+  mutate(Test_1M_Pop = (CumTests / Population) * 1000000)
+
+###############
+# Task 2: Q4  #
+###############
+
+df_master %>%
+  group_by(Date) %>%
+  summarise(TotalDeath = sum(NewDeaths)) %>%
+  arrange(desc(TotalDeath)) %>%
+  top_n(1) # Get top one row
+
+
+###############
+# Task 2: Q5  #
+###############
+
+# Prepare the dataset for the graph
+
+# Get global total by date
+df_cumulative <- df_master %>%
+  group_by(Date) %>%
+  summarise_at(vars(CumCases, CumDeaths, CumRecovered, CumTests), sum)
+
+names(df_cumulative) <- c("Date", "Infected Cases", "Deaths", "Recovered", "Tests")
+
+df_cumulative <- gather(data = df_cumulative, key = "Indicators", value = "Count", -Date)
+df_cumulative
+
+ggplot(data = df_cumulative, aes(x = Date, y = Count, color = Indicators)) +
+  geom_line() +
+  scale_y_log10(label = comma) +
+  labs(title = "COVID-19 Cases, Deaths, Recovery and Tests Globally",
+       x = "Time")
+
+
+###############
+# Task 2: Q6  #
+###############
+
+lastDay_data <- df_master %>%
+  filter(Date == "2020-05-05")
+
+
+###############
+# Task 2: Q7  #
+###############
+
+lastDay_data %>%
+  group_by(Continet) %>%
+  summarise_at(vars(CumCases, CumDeaths, CumRecovered, CumTests), sum)
+
+###############
+# Task 2: Q8  #
+###############
+
+top10activeW <- lastDay_data %>%
+  arrange(desc(Active)) %>%
+  head(n = 10)
+top10activeW
+
+top10casesW <- lastDay_data %>%
+  arrange(desc(CumCases)) %>%
+  head(n = 10)
+top10casesW
+
+
+top10fatalityW <- lastDay_data %>%
+  arrange(desc(FatalityRate)) %>%
+  head(n = 10)
+top10fatalityW
+
+top10testMW <- lastDay_data %>%
+  arrange(desc(Test_1M_Pop)) %>%
+  head(n = 10)
+top10testMW
+
+###############
+# Task 2: Q9 #
+###############
+
+top10casesCountries <- top10casesW$Country
+top10casesCountries
+
+df_master %>%
+  filter(Country %in% top10casesCountries) %>%
+  ggplot(aes(x = Date, y = CumCases, color = Country)) +
+  geom_line() +
+  scale_y_log10(label = comma) +
+  labs(y = "Total Cases",
+       x = "Day")
+
+###############
+# Task 2: Q10 #
+###############
+
+top10activeCountries <- top10activeW$Country
+top10activeCountries
+
+df_master %>%
+  filter(Country %in% top10activeCountries) %>%
+  ggplot(aes(x = Date, y = Active, color = Country)) +
+  geom_line() +
+  scale_y_log10(label = comma) +
+  labs(y = "Active Cases",
+       x = "Day")
 
 
 
