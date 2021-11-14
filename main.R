@@ -242,12 +242,38 @@ top10activeCountries <- top10activeW$Country
 top10activeCountries
 
 df_master %>%
-  filter(Country %in% top10activeCountries) %>%
-  ggplot(aes(x = Date, y = Active, color = Country)) +
+  filter(Country %in% top10casesCountries) %>%
+  ggplot(aes(x = Date, y = NewCases, color = Country)) +
   geom_line() +
+  facet_wrap(~Country) +
   scale_y_log10(label = comma) +
-  labs(y = "Active Cases",
+  labs(y = "Total Cases",
        x = "Day")
 
 
+###############
+# Task 2: Q11 #
+###############
+
+top10testMW %>%
+  select(Date, Country, CumCases, CumTests, Test_1M_Pop) %>%
+  rename(`Total number of infected Cases` = CumCases, `Total test so far` = CumTests, `Total test per million of the population` = Test_1M_Pop) %>%
+  gather(key = "Indicators", value = "Value", `Total number of infected Cases`:`Total test per million of the population`) %>%
+  ggplot(aes(x = Indicators, y = Value, fill = Indicators)) +
+  geom_col() +
+  scale_y_continuous(labels = comma) +
+  facet_wrap(~Country, scales = "free") +
+  theme(axis.text.x = element_blank())
+
+###############
+# Task 2: Q12 #
+###############
+
+lastDay_data %>%
+  group_by(Continet) %>%
+  summarise_at(vars(CumCases, CumDeaths, CumRecovered, CumTests), sum) %>%
+  gather(key = "Indicators", value = "Count", -Continet) %>%
+  ggplot(aes(x = Indicators, y = Count, fill = Continet)) +
+  geom_col() +
+  scale_y_log10()
 
