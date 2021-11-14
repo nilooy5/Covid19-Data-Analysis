@@ -1,5 +1,5 @@
 #' ---
-#' title: Assignment 1
+#' title: FINAL ASSESMENT
 #' author: Fazal Mahmud Niloy (u3228358)
 #' output: pdf_document
 #' ---
@@ -141,8 +141,8 @@ head(df_master)
 
 # Check the functionalities by filtering a country
 head(df_master %>%
-  filter(Country == "Australia") %>%
-  arrange(desc(Date)))
+       filter(Country == "Australia") %>%
+       arrange(desc(Date)))
 
 ###############
 # Task 2: Q3  #
@@ -350,11 +350,10 @@ lm_model_GDP_CUM <- lm(CumCases ~ GDP, data = train)
 # evaluate model on the test data
 summary(lm_model_GDP_CUM)
 plot(lm_model_GDP_CUM)
-
 # predicting
 test$PreditedCases <- predict(lm_model_GDP_CUM, test)
 # print the root mean squared error
-rmse(test$CumCases, test$PreditedCases)
+RMSE(test$CumCases, test$PreditedCases)
 
 
 ###############
@@ -367,5 +366,5 @@ summary(lmModel2)
 plot(lmModel2)
 
 test$PreditedAll <- predict(lmModel2, test)
-rmse(test$CumCases, test$PreditedAll)
+RMSE(test$CumCases, test$PreditedAll)
 
