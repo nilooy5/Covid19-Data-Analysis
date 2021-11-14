@@ -61,12 +61,12 @@ head(df_covid19)
 head(df_recovered)
 
 df_master <- merge(x = df_covid19, y = df_recovered, by = c("Country", "Date"), all.x = TRUE)
-View(df_master)
+head(df_master)
 
 # Inner join - df & tests
 
 df_master <- merge(x = df_master, y = df_tests, by = c("Code", "Date"), all.x = TRUE)
-View(df_master)
+head(df_master)
 
 # Inner join - df & countries dataset
 
@@ -75,7 +75,7 @@ df_countries <- df_countries %>%
   select(-Country)
 
 df_master <- merge( x = df_master, y = df_countries, by = "Code", all.x = TRUE)
-View(df_master)
+head(df_master)
 
 summary(df_master)
 
@@ -88,7 +88,7 @@ df_master <- df_master %>%
   mutate(Recovered = if_else(is.na(Recovered), 0, Recovered)) %>%
   mutate(NewTests = if_else(is.na(NewTests), 0, NewTests))
 
-View(df_master)
+head(df_master)
 
 ###############
 # Task 1: Q7  #
@@ -128,10 +128,10 @@ df_master %>%
 df_master <- df_master %>%
   mutate(Active = CumCases - (CumRecovered + CumDeaths)) %>% # Calculate the number of active cases
   mutate(FatalityRate = CumDeaths / CumCases) # Calculate the number of Fatality Rate
-View(df_master)
+head(df_master)
 
 # Check the functionalities by filtering a country
-View(df_master %>%
+head(df_master %>%
   filter(Country == "Australia") %>%
   arrange(desc(Date)))
 
@@ -324,7 +324,6 @@ boxplot.stats(cor_data$CumCases)$out
 ###############
 
 # Divide the cor_data into training and testing data
-install.packages("caret")
 dt <- createDataPartition(cor_data$CumCases, p = 0.65, list = FALSE)
 train<-cor_data[dt,]
 test<-cor_data[-dt,]
@@ -345,13 +344,8 @@ plot(lm_model_GDP_CUM)
 
 # predicting
 test$PreditedCases <- predict(lm_model_GDP_CUM, test)
-test
 # print the root mean squared error
-preds <-  test$PreditedCases
-preds
-actual <- test$GDP
-actual
-rmse(preds, actual)
+rmse(test$CumCases, test$PreditedCases)
 
 
 ###############
@@ -359,8 +353,8 @@ rmse(preds, actual)
 ###############
 
 lmModel2 <- lm(CumCases ~ . , data = train)
-print(lmModel2)
 # Validating Regression Coefficients and Models
 summary(lmModel2)
+plot(lmModel2)
 
-rm(test$PreditedPrice_1)
+
