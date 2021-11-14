@@ -102,6 +102,37 @@ df_master <- df_master %>%
 head(df_master)
 
 
+###############
+# Task 2: Q1  #
+###############
+
+df_master <- df_master %>%
+  group_by(Country) %>% # Group the dataset by country
+  arrange(Date) %>% # Arrange the data by date from low to high
+  mutate(CumCases = cumsum(NewCases)) %>%  # Calculate cumulative sum for Cases
+  mutate(CumDeaths = cumsum(NewDeaths)) %>% # Calculate cumulative sum for Dealths
+  mutate(CumRecovered = cumsum(Recovered)) %>% # Calculate cumulative sum for Recovered
+  mutate(CumTests = cumsum(NewTests)) # Calculate cumulative sum for Tests
+
+# Check the functionalities by filtering a country
+df_master %>%
+  filter(Country == "Bangladesh") %>%
+  arrange(desc(Date))
+
+
+###############
+# Task 2: Q2  #
+###############
+
+df_master <- df_master %>%
+  mutate(Active = CumCases - (CumRecovered + CumDeaths)) %>% # Calculate the number of active cases
+  mutate(FatalityRate = CumDeaths / CumCases) # Calculate the number of Fatality Rate
+View(df_master)
+
+# Check the functionalities by filtering a country
+View(df_master %>%
+  filter(Country == "Bangladesh") %>%
+  arrange(desc(Date)))
 
 
 
