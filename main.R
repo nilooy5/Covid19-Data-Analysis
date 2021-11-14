@@ -74,7 +74,6 @@ df_master <- merge(x = df_covid19, y = df_recovered, by = c("Country", "Date"), 
 head(df_master)
 
 # Inner join - df & tests
-
 df_master <- merge(x = df_master, y = df_tests, by = c("Code", "Date"), all.x = TRUE)
 head(df_master)
 
@@ -93,7 +92,7 @@ summary(df_master)
 # Task 1: Q6  #
 ###############
 
-# Find alll NA values in Recovered and NewTests fields and assign new value as 0
+#' Replace alll NA values in Recovered and NewTests with 0
 df_master <- df_master %>%
   mutate(Recovered = if_else(is.na(Recovered), 0, Recovered)) %>%
   mutate(NewTests = if_else(is.na(NewTests), 0, NewTests))
@@ -104,8 +103,8 @@ head(df_master)
 # Task 1: Q7  #
 ###############
 
-months(df_master$Date)
-week(df_master$Date)
+head(months(df_master$Date))
+head(week(df_master$Date))
 
 df_master <- df_master %>%
   mutate(Month = month(Date)) %>%
