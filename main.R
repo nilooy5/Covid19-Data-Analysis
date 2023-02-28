@@ -1,14 +1,3 @@
-#' ---
-#' title: FINAL ASSESSMENT
-#' author: Fazal Mahmud Niloy (u3228358)
-#' output: pdf_document
-#' ---
-
-# Start-------------------------------------------
-#' Unit & ID:   **Introduction to Data Science 11516**
-#' Course:      **Master of Data Science**
-#' Description: **Intro to Data Science Final Assessment**
-
 library(tidyverse)
 library(caret)
 library(ggplot2)
